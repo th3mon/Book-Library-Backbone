@@ -1,5 +1,5 @@
 // site/js/views/library.js
-/* global Backbone, $ */
+/* global Backbone, $, _ */
 'use strict';
 
 var app = app || {};
@@ -9,9 +9,14 @@ app.LibraryView = Backbone.View.extend({
 
   initialize: function(initialBooks){
     this.collection = new app.Library(initialBooks);
+    this.collection.fetch({
+      reset: true
+    });
+
     this.render();
 
     this.listenTo( this.collection, 'add', this.renderBook );
+    this.listenTo( this.collection, 'reset', this.render );
   },
 
   events: {
@@ -26,11 +31,29 @@ app.LibraryView = Backbone.View.extend({
     $( '#addBook div' ).children( 'input' )
       .each( function( i, el ) {
         if ( $(el).val() !== '' ) {
-          formData[ el.id ] = $( el ).val();
+          if (el.id === 'keywords') {
+            formData[el.id] = [];
+            _.each( $(el).val().split(' '), function(keyword) {
+              formData[el.id].push({
+                'keyword': keyword
+              });
+            });
+          }
+
+          else if (el.id === 'releaseDate') {
+            formData[el.id] = $('#releaseDate').datepicker('getDate').getTime();
+          }
+
+          else {
+            formData[el.id] = $(el).val();
+          }
         }
+
+        // CLear input field value
+        $(el).val('');
       });
 
-    this.collection.add( new app.Book( formData ) );
+    this.collection.create( formData );
   },
 
   // render library by rendering each book in its collection

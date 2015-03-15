@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Backbone.js Library</title>
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
+        <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
+        <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
         <link rel="stylesheet" href="css/screen.css">
     </head>
     <body>
@@ -19,31 +22,21 @@
             </form>
         </div>
 
-        <div class="bookContainer">
-            <img src="img/placeholder.png"/>
-            <ul>
-                <li>Title</li>
-                <li>Author</li>
-                <li>Release Date</li>
-                <li>Keywords</li>
-            </ul>
-
-            <button class="delete">Delete</button>
-        </div>
-
         <script id="bookTemplate" type="text/template">
             <img src="<%= coverImage %>"/>
             <ul>
                 <li><%= title %></li>
                 <li><%= author %></li>
-                <li><%= releaseDate %></li>
-                <li><%= keywords %></li>
+                <li><%= $.format.date( new Date( releaseDate ), 'MMMM yyyy' ) %></li>
+                <li><% _.each( keywords, function( keyobj ) {%> <%= keyobj.keyword %><% } ); %></li>
             </ul>
 
             <button class="delete">Delete</button>
         </script>
 
         <script src="js/lib/jquery.min.js"></script>
+        <script src="js/lib/jquery-ui.min.js"></script>
+        <script src="js/lib/jquery-dateFormat.min.js"></script>
         <script src="js/lib/underscore-min.js"></script>
         <script src="js/lib/backbone-min.js"></script>
         <script src="js/models/book.js"></script>
